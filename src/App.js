@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import tree from './images/tree.jpg'
 import './App.css';
 
 function App() {
-  const [inputNum, setInputNum] = useState(0);
+  const [inputNum, setInputNum] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [currentDeck, setCurrentDeck] = useState([]);
   const [currentIndex, setCurrentIndex] = useState([]);
@@ -23,7 +23,6 @@ function App() {
       }
       setErrMsg(''); 
       createRandomDeck(inputNum);
-      // setRemainingCards(null);
     }
   }
 
@@ -45,9 +44,7 @@ function App() {
 
       newDeck = [cardNums[i], cardNums[i], ...newDeck];
     } 
-
     randomizeNewDeck(newDeck);
-    // setCurrentDeck(newDeck);
   }
 
   const randomizeNewDeck = (newDeck) => {
@@ -129,7 +126,6 @@ function App() {
       {remainingCards === 0 && 
        <p style={{color: 'green'}}>You Win!</p>
       }
-      
     </div>
   );
 }
