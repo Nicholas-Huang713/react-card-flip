@@ -14,6 +14,10 @@ function App() {
   const handleKeyUp = (e) => {
     if(e.key === 'Enter') {
       e.preventDefault();
+      if(remainingCards > 0) {
+        setErrMsg('Game still in progress');
+        return;
+      }
       if(inputNum < 2) {
         setErrMsg('Amount must be larger or equal to 2');
         return;
@@ -23,6 +27,7 @@ function App() {
         return;
       }
       setErrMsg(''); 
+      setInputNum('');
       createRandomDeck(inputNum);
     }
   }
@@ -59,6 +64,7 @@ function App() {
   }
 
   const handleCardClick = (cardNum, index) => {
+    setErrMsg('')
     if(isChecking) {
       return;
     }
