@@ -9,6 +9,7 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState([]);
   const [currentCard, setCurrentCard] = useState(null);
   const [remainingCards, setRemainingCards] = useState(null);
+  const [isChecking, setIsChecking] = useState(false);
 
   const handleKeyUp = (e) => {
     if(e.key === 'Enter') {
@@ -36,12 +37,8 @@ function App() {
       cardNums[currentIndex] = cardNums[randomIndex];
       cardNums[randomIndex] = temporaryValue;
     }
-
-    console.log(cardNums);
-
     let newDeck= [];
     for(let i = 0; i < input; i++) {
-
       newDeck = [cardNums[i], cardNums[i], ...newDeck];
     } 
     randomizeNewDeck(newDeck);
@@ -62,24 +59,29 @@ function App() {
   }
 
   const handleCardClick = (cardNum, index) => {
-    if(currentIndex.length === 0) {
+    if(isChecking) {
+      return;
+    }
+    if(currentIndex.length === 0 && currentCard === null) {
       setCurrentIndex([index, ...currentIndex]);
       setCurrentCard(cardNum);
       return;
-    }
+    } 
     if(currentCard !== null) {
       setCurrentIndex([index, ...currentIndex]);
+      setIsChecking(true);
       if(currentCard === cardNum) {
         if(remainingCards - 2 === 0) {
           resetState();
         }
         setRemainingCards(remainingCards - 2);
         setCurrentCard(null);
-        return;
+        setIsChecking(false);
       } else {
+        setCurrentCard(null); 
         setTimeout(() => { 
           setCurrentIndex(currentIndex.filter((card) => card !== currentIndex[0]));
-          setCurrentCard(null); 
+          setIsChecking(false);
           }, 1000);
       }
     } else {
@@ -93,7 +95,6 @@ function App() {
     setCurrentIndex([]);
     setCurrentDeck([]);
     setInputNum(0);
-
   }
 
   return (
@@ -113,13 +114,36 @@ function App() {
         {currentDeck.length > 0 && (
           currentDeck.map((cardNum, index) => (
             currentIndex.includes(index) ? 
-            <div style={{border: 'solid black', padding: '60px'}}>{cardNum}</div>
-            :
-            <div>
-              <img src={tree} style={{width: '80px'}} 
-                onClick={() => handleCardClick(cardNum, index)}
-              />
+            // <div style={{border: 'solid black', padding: '60px'}}>{cardNum}</div>
+           ( <div className="flip-card ">
+              <div className="flip-card-inner flip-card-flipped">
+                <div className="flip-card-back">
+                  <h1>{cardNum}</h1> 
+                </div>
+                <div className="flip-card-front">
+                  <img src={tree} alt="Avatar" style={{width: "300px", height: '300px'}} />
+                </div>
+              </div>
             </div>
+            )
+            :
+            // <div>
+            //   <img src={tree} style={{width: '80px'}} 
+            //     onClick={() => handleCardClick(cardNum, index)}
+            //   />
+            // </div>
+            (
+              <div className="flip-card " onClick={() => handleCardClick(cardNum, index)}>
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src={tree} alt="Avatar" style={{width: "300px", height: '300px'}} />
+                  </div>
+                  <div className="flip-card-back">
+                    <h1>{cardNum}</h1> 
+                  </div>
+                </div>
+              </div>
+            )
           ))
         )}
       </div>
